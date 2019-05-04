@@ -1,5 +1,4 @@
-'''
-> Simple Python script to generate password combinations with nouns, verbs, adverbs, adjectives, numbers and symbols.
+﻿> Simple Python script to generate password combinations with nouns, verbs, adverbs, adjectives, numbers and symbols.
 >
 > It can be run as a module from within your own script or as a standalone program.
 >
@@ -47,4 +46,3 @@
 >                                   shufflePassword = True,
 >                                   displayPasswords = False)
 >
-'''
