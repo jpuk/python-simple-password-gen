@@ -66,4 +66,5 @@
                                    displayPasswords = False)
     print(password_list)
 
-
+The one syllable word lists included in the git are from from Ashley Bovan's  excellent "Parts of speech" word collection available from [here](http://www.ashley-bovan.co.uk/words/partsofspeech.html) where lists of words with more syllables are also available.
+ 
