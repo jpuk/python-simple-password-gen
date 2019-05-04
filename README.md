@@ -38,7 +38,7 @@
 
     from generatePasswords import generate_passwords
 
-    password_list = generate_password(numberOfNouns = 1,
+    password_list = generate_passwords(numberOfNouns = 1,
                                    numberOfVerbs = 1,
                                    numberOfAdverbs = 1,
                                    numberOfAdjectives = 1,
@@ -47,5 +47,6 @@
                                    numberOfPasswords = 25,
                                    shufflePassword = True,
                                    displayPasswords = False)
+    print(password_list)
 
 

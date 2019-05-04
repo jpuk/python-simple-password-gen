@@ -62,11 +62,11 @@ __license__ = "MIT License"
 #   --displayDefaults     Displays default values and exits
 #
 #
-# Alternatively generatePasswords can be used as a module from within your own script and will return a list of
+# Alternatively generatePasswords.py can be used as a module from within your own script and will return a list of
 # passwords.
 # Example:
 # from generatePasswords import generate_passwords
-# password_list = generate_password(numberOfNouns = 1,
+# password_list = generate_passwords(numberOfNouns = 1,
 #                                   numberOfVerbs = 1,
 #                                   numberOfAdverbs = 1,
 #                                   numberOfAdjectives = 1,
@@ -75,6 +75,8 @@ __license__ = "MIT License"
 #                                   numberOfPasswords = 25,
 #                                   shufflePassword = True,
 #                                   displayPasswords = False)
+# print(password_list)
+#
 import random
 import argparse
 
