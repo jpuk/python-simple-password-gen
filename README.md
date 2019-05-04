@@ -2,11 +2,26 @@
 
  It can be run as a module from within your own script or as a standalone program.
 
- Before running from the command line you can adjust the default values listed after  if 
+ Before running from the command line you can adjust the default values listed after
  
-    __name__ == "__main__":
 
-  in the source code or by providing optional values to override the defaults on the command line.
+    if __name__ == "__main__":
+
+  You can adjust the default values to suit your needs
+
+   
+ 
+    # default values  
+    numberOfNouns = 0 
+    numberOfVerbs = 0  
+    numberOfAdverbs = 1  
+    numberOfAdjectives = 1 
+    numberOfSymbols = 1  
+    numberRange = (0, 99) 
+    numberOfPasswords = 25 
+    shufflePassword = False
+
+  
 
  usage: generatePasswords.py  
  optional arguments:
@@ -33,7 +48,9 @@
    
  Alternatively generatePasswords.py can be used as a module from within your own script and will return a list of passwords.
  
- Example:
+ All values are optional and will default to values predefined in the generatePasswords() function if none are provided.
+ 
+ Example with options provided:
  
 
     from generatePasswords import generate_passwords
