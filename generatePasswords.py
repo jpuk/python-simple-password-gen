@@ -55,13 +55,20 @@ __license__ = "MIT License"
 #
 import random
 import argparse
+import os
+
 
 def openfile(fn):
+    if os.path.isfile(fn):
+        result = os.stat(fn)
+        if result.st_size < 1:
+            print("File {} is empty. Exiting.".format(fn))
+            exit(0)
     try:
         fp = open(fn, 'r')
         return fp
     except:
-        print("Could not open file {}, check file exists".format(fn))
+        print("Could not open file {}, check file exists and you have permission to read it. Exiting.".format(fn))
         exit(0)
 
 
@@ -80,8 +87,8 @@ commonSymbols = ['!','@',"£",'$','%','^','&','*','(',')','+','=','<','>','/','?
 
 
 # enter a value for the number of words or symbols from each category from which the password will be formed
-# enter a lower and upper range for the number component of the password
-# enter number of passwords to generate
+# enter a lower and upper range for the number components of the password
+# enter number of passwords to generates
 # choose to shuffle the password components or leave them in the order generated
 
 
@@ -183,7 +190,7 @@ if __name__ == "__main__":
     else:
         print("Generating password...")
 
-    print(args)
+    #print(args)
 
     generate_passwords(numberOfSymbols=args.symbols, numberOfNouns=args.nouns, numberOfAdverbs=args.adverbs,
                        numberOfAdjectives=args.adjectives, numberOfPasswords=args.numberOfPasswords,
