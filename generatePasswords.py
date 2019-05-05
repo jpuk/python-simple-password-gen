@@ -54,6 +54,7 @@ __license__ = "MIT License"
 # print(password_list)
 #
 import random
+import secrets
 import argparse
 import os
 
@@ -73,7 +74,7 @@ def openfile(fn):
 
 
 def get_random_value(word_list):
-    return word_list[random.randint(0, len(word_list)-1)].capitalize()
+    return secrets.choice(word_list).capitalize()
 
 
 # word lists I have used come from http://www.ashley-bovan.co.uk/words/partsofspeech.html
@@ -88,7 +89,7 @@ commonSymbols = ['!','@',"£",'$','%','^','&','*','(',')','+','=','<','>','/','?
 
 # enter a value for the number of words or symbols from each category from which the password will be formed
 # enter a lower and upper range for the number components of the password
-# enter number of passwords to generates
+# enter number of passwords to generate
 # choose to shuffle the password components or leave them in the order generated
 
 
