@@ -42,15 +42,15 @@ __license__ = "MIT License"
 # All values are optional and will default to values predefined in the generatePasswords() function if none are provided.
 # Example with options provided:
 # from generatePasswords import generate_passwords
-# password_list = generate_passwords(numberOfNouns = 1,
-#                                   numberOfVerbs = 1,
-#                                   numberOfAdverbs = 1,
-#                                   numberOfAdjectives = 1,
-#                                   numberOfSymbols = 1,
-#                                   numberRange = (0, 99),
-#                                   numberOfPasswords = 25,
-#                                   shufflePassword = True,
-#                                   displayPasswords = False)
+# password_list = generate_passwords(number_of_nouns = 1,
+#                                   number_of_verbs = 1,
+#                                   number_of_adverbs = 1,
+#                                   number_of_adjectives = 1,
+#                                   number_of_symbols = 1,
+#                                   number_range = (0, 99),
+#                                   number_of_passwords = 25,
+#                                   shuffle_password = True,
+#                                   display_passwords = False)
 # print(password_list)
 #
 import random
@@ -93,89 +93,89 @@ commonSymbols = ['!','@',"£",'$','%','^','&','*','(',')','+','=','<','>','/','?
 # choose to shuffle the password components or leave them in the order generated
 
 
-def generate_passwords(numberOfNouns = 0,
-                       numberOfVerbs = 0,
-                       numberOfAdverbs = 1,
-                       numberOfAdjectives = 1,
-                       numberOfSymbols = 1,
-                       numberRange = (0, 99),
-                       numberOfPasswords = 25,
-                       shufflePassword = True,
-                       displayPasswords = True):
+def generate_passwords(number_of_nouns = 0,
+                       number_of_verbs = 0,
+                       number_of_adverbs = 1,
+                       number_of_adjectives = 1,
+                       number_of_symbols = 1,
+                       number_range = (0, 99),
+                       number_of_passwords = 25,
+                       shuffle_password = True,
+                       display_passwords = True):
     separator = ""
     password_list = []
-    for _ in range(numberOfPasswords):
+    for _ in range(number_of_passwords):
         password_components = []
-        if numberOfNouns > 0:
-            for _ in range(numberOfNouns):
+        if number_of_nouns > 0:
+            for _ in range(number_of_nouns):
                 password_components.append(get_random_value(nouns))
 
-        if numberOfVerbs > 0:
-            for _ in range(numberOfVerbs):
+        if number_of_verbs > 0:
+            for _ in range(number_of_verbs):
                 password_components.append(get_random_value(verbs))
 
-        if numberOfAdverbs > 0:
-            for _ in range(numberOfAdverbs):
+        if number_of_adverbs > 0:
+            for _ in range(number_of_adverbs):
                 password_components.append(get_random_value(adverbs))
 
-        if numberOfAdjectives > 0:
-            for _ in range(numberOfAdjectives):
+        if number_of_adjectives > 0:
+            for _ in range(number_of_adjectives):
                 password_components.append(get_random_value(adjectives))
 
-        password_components.append(str(random.randint(numberRange[0], numberRange[1])))
+        password_components.append(str(random.randint(number_range[0], number_range[1])))
 
-        if numberOfSymbols > 0:
-            for _ in range(numberOfSymbols):
+        if number_of_symbols > 0:
+            for _ in range(number_of_symbols):
                 password_components.append(get_random_value(commonSymbols))
 
-        if shufflePassword:
+        if shuffle_password:
             random.shuffle(password_components)
         p = separator.join(password_components)
         password_list.append(p)
-        if displayPasswords:
+        if display_passwords:
             print(p)
     return password_list
 
 
 if __name__ == "__main__":
     # default values
-    numberOfNouns = 0
-    numberOfVerbs = 0
-    numberOfAdverbs = 1
-    numberOfAdjectives = 1
-    numberOfSymbols = 1
-    numberRange = (0, 99)
-    numberOfPasswords = 25
-    shufflePassword = False
+    number_of_nouns = 0
+    number_of_verbs = 0
+    number_of_adverbs = 1
+    number_of_adjectives = 1
+    number_of_symbols = 1
+    number_range = (0, 99)
+    number_of_passwords = 25
+    shuffle_password = False
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--nouns",
-                        help="number of nouns to use, default is {}".format(numberOfNouns),
-                        default=numberOfNouns, type=int)
+                        help="number of nouns to use, default is {}".format(number_of_nouns),
+                        default=number_of_nouns, type=int)
     parser.add_argument("--verbs",
-                        help="number of verbs to use, default is {}".format(numberOfVerbs),
-                        default=numberOfVerbs, type=int)
+                        help="number of verbs to use, default is {}".format(number_of_verbs),
+                        default=number_of_verbs, type=int)
     parser.add_argument("--adverbs",
-                        help="number of adverbs to use, default is {}".format(numberOfAdverbs),
-                        default=numberOfAdverbs, type=int)
+                        help="number of adverbs to use, default is {}".format(number_of_adverbs),
+                        default=number_of_adverbs, type=int)
     parser.add_argument("--adjectives",
-                        help="number of adjectives to use, default is {}".format(numberOfAdjectives),
-                        default=numberOfAdjectives, type=int)
+                        help="number of adjectives to use, default is {}".format(number_of_adjectives),
+                        default=number_of_adjectives, type=int)
     parser.add_argument("--symbols",
-                        help="number of symbols to use, default is {}".format(numberOfSymbols),
-                        default=numberOfSymbols, type=int)
+                        help="number of symbols to use, default is {}".format(number_of_symbols),
+                        default=number_of_symbols, type=int)
     parser.add_argument("--numberLowerRange",
-                        help="lower range of number to use, default is {}".format(numberRange[0]),
-                        default=numberRange[0], type=int)
+                        help="lower range of number to use, default is {}".format(number_range[0]),
+                        default=number_range[0], type=int)
     parser.add_argument("--numberUpperRange",
-                        help="upper range of number to use, default is {}".format(numberRange[1]),
-                        default=numberRange[1], type=int)
-    parser.add_argument("--numberOfPasswords",
-                        help="number of passwords to generate, default is {}".format(numberOfPasswords),
-                        default=numberOfPasswords, type=int)
-    parser.add_argument("--shufflePassword",
-                        help="shuffle the order in which each password component is used, default is {}".format(shufflePassword),
-                        default=shufflePassword, action="store_true")
+                        help="upper range of number to use, default is {}".format(number_range[1]),
+                        default=number_range[1], type=int)
+    parser.add_argument("--number_of_passwords",
+                        help="number of passwords to generate, default is {}".format(number_of_passwords),
+                        default=number_of_passwords, type=int)
+    parser.add_argument("--shuffle_password",
+                        help="shuffle the order in which each password component is used, default is {}".format(shuffle_password),
+                        default=shuffle_password, action="store_true")
     parser.add_argument("--displayDefaults",
                         help="Displays default values and exits",
                         default=False, action="store_true")
@@ -186,14 +186,14 @@ if __name__ == "__main__":
         print("Default values are set as follows;\n{}".format(args))
         exit(0)
 
-    if args.numberOfPasswords > 1:
-        print("Generating {} passwords...".format(args.numberOfPasswords))
+    if args.number_of_passwords > 1:
+        print("Generating {} passwords...".format(args.number_of_passwords))
     else:
         print("Generating password...")
 
     #print(args)
 
-    generate_passwords(numberOfSymbols=args.symbols, numberOfNouns=args.nouns, numberOfAdverbs=args.adverbs,
-                       numberOfAdjectives=args.adjectives, numberOfPasswords=args.numberOfPasswords,
-                       shufflePassword=args.shufflePassword,
-                       numberRange=(args.numberLowerRange, args.numberUpperRange))
+    generate_passwords(number_of_symbols=args.symbols, number_of_nouns=args.nouns, number_of_adverbs=args.adverbs,
+                       number_of_adjectives=args.adjectives, number_of_passwords=args.number_of_passwords,
+                       shuffle_password=args.shuffle_password,
+                       number_range=(args.numberLowerRange, args.numberUpperRange))
