@@ -118,17 +118,16 @@ def generate_passwords(number_of_nouns=0,
             if w_list[0] > 0:
                 for _ in range(w_list[0]):
                     password_components.append(get_random_value(w_list[1]))
-
         password_components.append(str(random.randint(number_range[0], number_range[1])))
 
         if shuffle_password:
             random.shuffle(password_components)
 
-        p = separator.join(password_components)
-        password_list.append(p)
+        # add completed password to list of passwords
+        password_list.append(separator.join(password_components))
 
         if display_passwords:
-            print(p)
+            print(separator.join(password_components))
 
     return password_list
 
