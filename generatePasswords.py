@@ -80,17 +80,6 @@ def openfile(fn):
 def get_random_value(word_list):
     return secrets.choice(word_list).capitalize()
 
-
-# word lists I have used come from http://www.ashley-bovan.co.uk/words/partsofspeech.html
-# (https://drive.google.com/file/d/0B5eYVI2s0XztOVdaUnNWQWFZOEU/)
-# but any text file formatted with one word per line will work
-nouns = [line.rstrip('\n') for line in openfile('./1syllablenouns.txt')]
-verbs = [line.rstrip('\n') for line in openfile('./1syllableverbs.txt')]
-adverbs = [line.rstrip('\n') for line in openfile('./1syllableadverbs.txt')]
-adjectives = [line.rstrip('\n') for line in openfile('./1syllableadjectives.txt')]
-common_symbols = ['!','@',"£",'$','%','^','&','*','(',')','+','=','<','>','/','?']
-
-
 # enter a value for the number of words or symbols from each category from which the password will be formed
 # enter a lower and upper range for the number components of the password
 # enter number of passwords to generate
@@ -108,6 +97,14 @@ def generate_passwords(number_of_nouns=0,
                        display_passwords=True):
     separator = ""
     password_list = []
+    # word lists I have used come from http://www.ashley-bovan.co.uk/words/partsofspeech.html
+    # (https://drive.google.com/file/d/0B5eYVI2s0XztOVdaUnNWQWFZOEU/)
+    # but any text file formatted with one word per line will work
+    nouns = [line.rstrip('\n') for line in openfile('./1syllablenouns.txt')]
+    verbs = [line.rstrip('\n') for line in openfile('./1syllableverbs.txt')]
+    adverbs = [line.rstrip('\n') for line in openfile('./1syllableadverbs.txt')]
+    adjectives = [line.rstrip('\n') for line in openfile('./1syllableadjectives.txt')]
+    common_symbols = ['!', '@', "£", '$', '%', '^', '&', '*', '(', ')', '+', '=', '<', '>', '/', '?']
     word_lists = [(number_of_nouns, nouns), (number_of_verbs, verbs), (number_of_adverbs, adverbs),
                   (number_of_adjectives, adjectives), (number_of_symbols, common_symbols)]
 
