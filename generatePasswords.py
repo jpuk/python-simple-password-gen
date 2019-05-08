@@ -3,7 +3,7 @@
 Module Docstring
 """
 __author__ = "John Porter"
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 __license__ = "MIT License"
 # MIT License
 #
@@ -30,17 +30,20 @@ __license__ = "MIT License"
 
 # Python script to generate simple password combinations
 #
-# It can be run either as a module from within your own script or as a standalone program from the command line.
+# It can be run as either a module from within your own script or as a standalone program on the command line.
 #
-# When running from the command line you can adjust the default values in this file after if _name__ == "__main__":'
-# to provide defaults options that are applied if you do not supply any command line options.
+# When running from the command line you can adjust the default values in this file after "if _name__ == "__main__":"
+# to provide defaults options that are applied if you do not provide any command line arguments.
 #
 # To see a full list of command line options run python ./generatePassword.py --help
 #
-# Alternatively, generatePasswords.py can be used as a module from within your own script and will return a list of
+# When used as a module from within your own script generate_passwords(...) will return a list of
 # passwords.
-# All values are optional and will default to values predefined in the generatePasswords() function if none are provided.
-# Example with options provided:
+# All values provided to generate_passwords() are optional and if none are provided it will default to the values
+# predefined in the generatePasswords() function.
+#
+# Example with options provided to generate_passwords():
+#
 # from generatePasswords import generate_passwords
 # password_list = generate_passwords(number_of_nouns = 1,
 #                                   number_of_verbs = 1,
@@ -60,6 +63,7 @@ import os
 
 
 def openfile(fn):
+    # check file exists and is not empty
     if os.path.isfile(fn):
         result = os.stat(fn)
         if result.st_size < 1:
@@ -84,7 +88,7 @@ nouns = [line.rstrip('\n') for line in openfile('./1syllablenouns.txt')]
 verbs = [line.rstrip('\n') for line in openfile('./1syllableverbs.txt')]
 adverbs = [line.rstrip('\n') for line in openfile('./1syllableadverbs.txt')]
 adjectives = [line.rstrip('\n') for line in openfile('./1syllableadjectives.txt')]
-commonSymbols = ['!','@',"£",'$','%','^','&','*','(',')','+','=','<','>','/','?']
+common_symbols = ['!','@',"£",'$','%','^','&','*','(',')','+','=','<','>','/','?']
 
 
 # enter a value for the number of words or symbols from each category from which the password will be formed
@@ -92,53 +96,45 @@ commonSymbols = ['!','@',"£",'$','%','^','&','*','(',')','+','=','<','>','/','?
 # enter number of passwords to generate
 # choose to shuffle the password components or leave them in the order generated
 
-
-def generate_passwords(number_of_nouns = 0,
-                       number_of_verbs = 0,
-                       number_of_adverbs = 1,
-                       number_of_adjectives = 1,
-                       number_of_symbols = 1,
-                       number_range = (0, 99),
-                       number_of_passwords = 25,
-                       shuffle_password = True,
-                       display_passwords = True):
+# the default option values in this function definition are overridden when run from the command line.
+def generate_passwords(number_of_nouns=0,
+                       number_of_verbs=0,
+                       number_of_adverbs=1,
+                       number_of_adjectives=1,
+                       number_of_symbols=1,
+                       number_range=(0, 99),
+                       number_of_passwords=25,
+                       shuffle_password=True,
+                       display_passwords=True):
     separator = ""
     password_list = []
+    word_lists = [(number_of_nouns, nouns), (number_of_verbs, verbs), (number_of_adverbs, adverbs),
+                  (number_of_adjectives, adjectives), (number_of_symbols, common_symbols)]
+
     for _ in range(number_of_passwords):
         password_components = []
-        if number_of_nouns > 0:
-            for _ in range(number_of_nouns):
-                password_components.append(get_random_value(nouns))
-
-        if number_of_verbs > 0:
-            for _ in range(number_of_verbs):
-                password_components.append(get_random_value(verbs))
-
-        if number_of_adverbs > 0:
-            for _ in range(number_of_adverbs):
-                password_components.append(get_random_value(adverbs))
-
-        if number_of_adjectives > 0:
-            for _ in range(number_of_adjectives):
-                password_components.append(get_random_value(adjectives))
+        # loop through each word list and choose a random word to add to password_components[]
+        for w_list in word_lists:
+            if w_list[0] > 0:
+                for _ in range(w_list[0]):
+                    password_components.append(get_random_value(w_list[1]))
 
         password_components.append(str(random.randint(number_range[0], number_range[1])))
 
-        if number_of_symbols > 0:
-            for _ in range(number_of_symbols):
-                password_components.append(get_random_value(commonSymbols))
-
         if shuffle_password:
             random.shuffle(password_components)
+
         p = separator.join(password_components)
         password_list.append(p)
+
         if display_passwords:
             print(p)
+
     return password_list
 
 
 if __name__ == "__main__":
-    # default values
+    # default values when run from the command line
     number_of_nouns = 0
     number_of_verbs = 0
     number_of_adverbs = 1
@@ -164,10 +160,10 @@ if __name__ == "__main__":
     parser.add_argument("--symbols",
                         help="number of symbols to use, default is {}".format(number_of_symbols),
                         default=number_of_symbols, type=int)
-    parser.add_argument("--numberLowerRange",
+    parser.add_argument("--number_lower_range",
                         help="lower range of number to use, default is {}".format(number_range[0]),
                         default=number_range[0], type=int)
-    parser.add_argument("--numberUpperRange",
+    parser.add_argument("--number_upper_range",
                         help="upper range of number to use, default is {}".format(number_range[1]),
                         default=number_range[1], type=int)
     parser.add_argument("--number_of_passwords",
@@ -176,13 +172,14 @@ if __name__ == "__main__":
     parser.add_argument("--shuffle_password",
                         help="shuffle the order in which each password component is used, default is {}".format(shuffle_password),
                         default=shuffle_password, action="store_true")
-    parser.add_argument("--displayDefaults",
+    parser.add_argument("--display_defaults",
                         help="Displays default values and exits",
                         default=False, action="store_true")
     args = parser.parse_args()
 
     print("Simple password generator by John Porter (c) 2019")
-    if args.displayDefaults:
+ 
+    if args.display_defaults:
         print("Default values are set as follows;\n{}".format(args))
         exit(0)
 
@@ -191,9 +188,8 @@ if __name__ == "__main__":
     else:
         print("Generating password...")
 
-    #print(args)
-
     generate_passwords(number_of_symbols=args.symbols, number_of_nouns=args.nouns, number_of_adverbs=args.adverbs,
                        number_of_adjectives=args.adjectives, number_of_passwords=args.number_of_passwords,
                        shuffle_password=args.shuffle_password,
-                       number_range=(args.numberLowerRange, args.numberUpperRange))
+                       number_range=(args.number_lower_range, args.number_upper_range)
+                       )
