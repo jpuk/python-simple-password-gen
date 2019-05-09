@@ -105,16 +105,19 @@ def generate_passwords(number_of_nouns=0,
     adverbs = [line.rstrip('\n') for line in openfile('./1syllableadverbs.txt')]
     adjectives = [line.rstrip('\n') for line in openfile('./1syllableadjectives.txt')]
     common_symbols = ['!', '@', "£", '$', '%', '^', '&', '*', '(', ')', '+', '=', '<', '>', '/', '?']
-    word_lists = [(number_of_nouns, nouns), (number_of_verbs, verbs), (number_of_adverbs, adverbs),
-                  (number_of_adjectives, adjectives), (number_of_symbols, common_symbols)]
+    word_lists = [{ "number" : number_of_nouns, "words" : nouns},
+                  { "number" : number_of_verbs, "words" : verbs},
+                  { "number" : number_of_adverbs, "words" : adverbs},
+                  { "number" : number_of_adjectives, "words" : adjectives},
+                  { "number" : number_of_symbols, "words" : common_symbols}]
 
     for _ in range(number_of_passwords):
         password_components = []
         # loop through each word list and choose a random word to add to password_components[]
         for w_list in word_lists:
-            if w_list[0] > 0:
-                for _ in range(w_list[0]):
-                    password_components.append(get_random_value(w_list[1]))
+            if w_list["number"] > 0:
+                for _ in range(w_list["number"]):
+                    password_components.append(get_random_value(w_list["words"]))
         password_components.append(str(random.randint(number_range[0], number_range[1])))
 
         if shuffle_password:
