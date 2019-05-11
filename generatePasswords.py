@@ -52,6 +52,7 @@ __license__ = "MIT License"
 #                                   number_of_symbols = 1,
 #                                   number_range = (0, 99),
 #                                   number_of_passwords = 25,
+#                                   word_separator="",
 #                                   shuffle_password = True,
 #                                   display_passwords = False)
 # print(password_list)
@@ -80,6 +81,10 @@ def openfile(fn):
 def get_random_value(word_list):
     return secrets.choice(word_list).capitalize()
 
+
+def get_random_number_as_string(number_range):
+    return str(random.randint(number_range[0], number_range[1]))
+
 # enter a value for the number of words or symbols from each category from which the password will be formed
 # enter a lower and upper range for the number components of the password
 # enter number of passwords to generate
@@ -93,9 +98,9 @@ def generate_passwords(number_of_nouns=0,
                        number_of_symbols=1,
                        number_range=(0, 99),
                        number_of_passwords=25,
+                       word_separator="",
                        shuffle_password=True,
                        display_passwords=True):
-    separator = ""
     password_list = []
     # word lists I have used come from http://www.ashley-bovan.co.uk/words/partsofspeech.html
     # (https://drive.google.com/file/d/0B5eYVI2s0XztOVdaUnNWQWFZOEU/)
@@ -118,13 +123,13 @@ def generate_passwords(number_of_nouns=0,
             if w_list["number_of_words_to_use"] > 0:
                 for _ in range(w_list["number_of_words_to_use"]):
                     password_components.append(get_random_value(w_list["word_list"]))
-        password_components.append(str(random.randint(number_range[0], number_range[1])))
+        password_components.append(get_random_number_as_string(number_range))
 
         if shuffle_password:
             random.shuffle(password_components)
 
         # add completed password to list of passwords
-        p = separator.join(password_components)
+        p = word_separator.join(password_components)
         password_list.append(p)
 
         if display_passwords:
@@ -135,14 +140,15 @@ def generate_passwords(number_of_nouns=0,
 
 if __name__ == "__main__":
     # default values when run from the command line
-    number_of_nouns=0
-    number_of_verbs=0
-    number_of_adverbs=1
-    number_of_adjectives=1
-    number_of_symbols=1
-    number_range=(0, 99)
-    number_of_passwords=25
-    shuffle_password=False
+    number_of_nouns = 0
+    number_of_verbs = 0
+    number_of_adverbs = 1
+    number_of_adjectives = 1
+    number_of_symbols = 1
+    number_range = (0, 99)
+    word_separator = ""
+    number_of_passwords = 25
+    shuffle_password = False
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--nouns",
@@ -169,6 +175,10 @@ if __name__ == "__main__":
     parser.add_argument("--number_of_passwords",
                         help="number of passwords to generate, default is {}".format(number_of_passwords),
                         default=number_of_passwords, type=int)
+    parser.add_argument("--word_separator",
+                        help="choose a character or string to separate the randomly selected words. The default is '{}'"
+                        .format(word_separator),
+                        default=word_separator, type=str)
     parser.add_argument("--shuffle_password",
                         help="shuffle the order in which each password component is used, default is {}"
                         .format(shuffle_password),
@@ -191,6 +201,6 @@ if __name__ == "__main__":
 
     generate_passwords(number_of_symbols=args.symbols, number_of_nouns=args.nouns, number_of_adverbs=args.adverbs,
                        number_of_adjectives=args.adjectives, number_of_passwords=args.number_of_passwords,
-                       shuffle_password=args.shuffle_password,
+                       word_separator=args.word_separator, shuffle_password=args.shuffle_password,
                        number_range=(args.number_lower_range, args.number_upper_range)
                        )
