@@ -79,6 +79,10 @@ def openfile(fn):
         exit(0)
 
 
+def split_file_in_to_list(fn):
+    return [line.rstrip('\n') for line in openfile(fn)]
+
+
 def get_random_value(word_list, capitalize):
     if capitalize:
         return secrets.choice(word_list).capitalize()
@@ -90,7 +94,7 @@ def get_random_number_as_string(number_range):
     return str(random.randint(number_range[0], number_range[1]))
 
 
-def append_word_lists(word_lists, number_of_words, word_list):
+def append_word_list(word_lists, number_of_words, word_list):
     word_lists.append({"number_of_words_to_use": number_of_words, "word_list": word_list})
     return word_lists
 
@@ -117,28 +121,27 @@ def generate_passwords(number_of_nouns=0,
 
     # don't bother loading the word list file if we're not going to use any of it as a component of our passwords.
     word_lists = []
-    if (number_of_nouns > 0):
-        nouns = [line.rstrip('\n') for line in openfile('./1syllablenouns.txt')]
-        word_lists = append_word_lists(word_lists, number_of_nouns, nouns)
-    if (number_of_verbs > 0):
-        verbs = [line.rstrip('\n') for line in openfile('./1syllableverbs.txt')]
-        word_lists = append_word_lists(word_lists, number_of_verbs, verbs)
-    if (number_of_adverbs > 0):
-        adverbs = [line.rstrip('\n') for line in openfile('./1syllableadverbs.txt')]
-        word_lists = append_word_lists(word_lists, number_of_adverbs, adverbs)
-    if (number_of_adjectives > 0):
-        adjectives = [line.rstrip('\n') for line in openfile('./1syllableadjectives.txt')]
-        word_lists = append_word_lists(word_lists, number_of_adjectives, adjectives)
-    if (number_of_symbols > 0):
+    if number_of_nouns > 0:
+        nouns = split_file_in_to_list('./1syllablenouns.txt')
+        word_lists = append_word_list(word_lists, number_of_nouns, nouns)
+    if number_of_verbs > 0:
+        verbs = split_file_in_to_list('./1syllableverbs.txt')
+        word_lists = append_word_list(word_lists, number_of_verbs, verbs)
+    if number_of_adverbs > 0:
+        adverbs = split_file_in_to_list('./1syllableadverbs.txt')
+        word_lists = append_word_list(word_lists, number_of_adverbs, adverbs)
+    if number_of_adjectives > 0:
+        adjectives = split_file_in_to_list('./1syllableadjectives.txt')
+        word_lists = append_word_list(word_lists, number_of_adjectives, adjectives)
+    if number_of_symbols > 0:
         common_symbols = ['!', '@', "£", '$', '%', '^', '&', '*', '(', ')', '+', '=', '<', '>', '/', '?']
-        word_lists = append_word_lists(word_lists, number_of_symbols, common_symbols)
+        word_lists = append_word_list(word_lists, number_of_symbols, common_symbols)
 
     password_list = []
     for _ in range(number_of_passwords):
         password_components = []
         # loop through each word list and choose a random word to add to password_components[]
         for w_list in word_lists:
-            if w_list["number_of_words_to_use"] > 0:
                 for _ in range(w_list["number_of_words_to_use"]):
                     password_components.append(get_random_value(w_list["word_list"], capitalize))
         password_components.append(get_random_number_as_string(number_range))
