@@ -54,6 +54,7 @@ __license__ = "MIT License"
 #                                   number_of_passwords = 25,
 #                                   word_separator="",
 #                                   shuffle_password = True,
+#                                   capitalize = True,
 #                                   display_passwords = False)
 # print(password_list)
 #
@@ -78,12 +79,20 @@ def openfile(fn):
         exit(0)
 
 
-def get_random_value(word_list):
-    return secrets.choice(word_list).capitalize()
+def get_random_value(word_list, capitalize):
+    if capitalize:
+        return secrets.choice(word_list).capitalize()
+    else:
+        return secrets.choice(word_list)
 
 
 def get_random_number_as_string(number_range):
     return str(random.randint(number_range[0], number_range[1]))
+
+
+def append_word_lists(word_lists, number_of_words, word_list):
+    word_lists.append({"number_of_words_to_use": number_of_words, "word_list": word_list})
+    return word_lists
 
 # enter a value for the number of words or symbols from each category from which the password will be formed
 # enter a lower and upper range for the number components of the password
@@ -100,29 +109,38 @@ def generate_passwords(number_of_nouns=0,
                        number_of_passwords=25,
                        word_separator="",
                        shuffle_password=True,
-                       display_passwords=True):
-    password_list = []
+                       display_passwords=True,
+                       capitalize=True):
     # word lists I have used come from http://www.ashley-bovan.co.uk/words/partsofspeech.html
     # (https://drive.google.com/file/d/0B5eYVI2s0XztOVdaUnNWQWFZOEU/)
     # but any text file formatted with one word per line will work
-    nouns = [line.rstrip('\n') for line in openfile('./1syllablenouns.txt')]
-    verbs = [line.rstrip('\n') for line in openfile('./1syllableverbs.txt')]
-    adverbs = [line.rstrip('\n') for line in openfile('./1syllableadverbs.txt')]
-    adjectives = [line.rstrip('\n') for line in openfile('./1syllableadjectives.txt')]
-    common_symbols = ['!', '@', "£", '$', '%', '^', '&', '*', '(', ')', '+', '=', '<', '>', '/', '?']
-    word_lists = [{ "number_of_words_to_use": number_of_nouns, "word_list": nouns},
-                  { "number_of_words_to_use": number_of_verbs, "word_list": verbs},
-                  { "number_of_words_to_use": number_of_adverbs, "word_list": adverbs},
-                  { "number_of_words_to_use": number_of_adjectives, "word_list": adjectives},
-                  { "number_of_words_to_use": number_of_symbols, "word_list": common_symbols}]
 
+    # don't bother loading the word list file if we're not going to use any of it as a component of our passwords.
+    word_lists = []
+    if (number_of_nouns > 0):
+        nouns = [line.rstrip('\n') for line in openfile('./1syllablenouns.txt')]
+        word_lists = append_word_lists(word_lists, number_of_nouns, nouns)
+    if (number_of_verbs > 0):
+        verbs = [line.rstrip('\n') for line in openfile('./1syllableverbs.txt')]
+        word_lists = append_word_lists(word_lists, number_of_verbs, verbs)
+    if (number_of_adverbs > 0):
+        adverbs = [line.rstrip('\n') for line in openfile('./1syllableadverbs.txt')]
+        word_lists = append_word_lists(word_lists, number_of_adverbs, adverbs)
+    if (number_of_adjectives > 0):
+        adjectives = [line.rstrip('\n') for line in openfile('./1syllableadjectives.txt')]
+        word_lists = append_word_lists(word_lists, number_of_adjectives, adjectives)
+    if (number_of_symbols > 0):
+        common_symbols = ['!', '@', "£", '$', '%', '^', '&', '*', '(', ')', '+', '=', '<', '>', '/', '?']
+        word_lists = append_word_lists(word_lists, number_of_symbols, common_symbols)
+
+    password_list = []
     for _ in range(number_of_passwords):
         password_components = []
         # loop through each word list and choose a random word to add to password_components[]
         for w_list in word_lists:
             if w_list["number_of_words_to_use"] > 0:
                 for _ in range(w_list["number_of_words_to_use"]):
-                    password_components.append(get_random_value(w_list["word_list"]))
+                    password_components.append(get_random_value(w_list["word_list"], capitalize))
         password_components.append(get_random_number_as_string(number_range))
 
         if shuffle_password:
@@ -140,49 +158,54 @@ def generate_passwords(number_of_nouns=0,
 
 if __name__ == "__main__":
     # default values when run from the command line
-    number_of_nouns = 0
-    number_of_verbs = 0
-    number_of_adverbs = 1
-    number_of_adjectives = 1
-    number_of_symbols = 1
-    number_range = (0, 99)
-    word_separator = ""
-    number_of_passwords = 25
-    shuffle_password = False
+    default_number_of_nouns = 0
+    default_number_of_verbs = 0
+    default_number_of_adverbs = 1
+    default_number_of_adjectives = 1
+    default_number_of_symbols = 1
+    default_number_range = (0, 99)
+    default_word_separator = ""
+    default_number_of_passwords = 25
+    default_capitalize = True
+    default_shuffle_password = False
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--nouns",
-                        help="number of nouns to use, default is {}".format(number_of_nouns),
-                        default=number_of_nouns, type=int)
+                        help="number of nouns to use, default is {}".format(default_number_of_nouns),
+                        default=default_number_of_nouns, type=int)
     parser.add_argument("--verbs",
-                        help="number of verbs to use, default is {}".format(number_of_verbs),
-                        default=number_of_verbs, type=int)
+                        help="number of verbs to use, default is {}".format(default_number_of_verbs),
+                        default=default_number_of_verbs, type=int)
     parser.add_argument("--adverbs",
-                        help="number of adverbs to use, default is {}".format(number_of_adverbs),
-                        default=number_of_adverbs, type=int)
+                        help="number of adverbs to use, default is {}".format(default_number_of_adverbs),
+                        default=default_number_of_adverbs, type=int)
     parser.add_argument("--adjectives",
-                        help="number of adjectives to use, default is {}".format(number_of_adjectives),
-                        default=number_of_adjectives, type=int)
+                        help="number of adjectives to use, default is {}".format(default_number_of_adjectives),
+                        default=default_number_of_adjectives, type=int)
     parser.add_argument("--symbols",
-                        help="number of symbols to use, default is {}".format(number_of_symbols),
-                        default=number_of_symbols, type=int)
+                        help="number of symbols to use, default is {}".format(default_number_of_symbols),
+                        default=default_number_of_symbols, type=int)
     parser.add_argument("--number_lower_range",
-                        help="lower range of number to use, default is {}".format(number_range[0]),
-                        default=number_range[0], type=int)
+                        help="lower range of number to use, default is {}".format(default_number_range[0]),
+                        default=default_number_range[0], type=int)
     parser.add_argument("--number_upper_range",
-                        help="upper range of number to use, default is {}".format(number_range[1]),
-                        default=number_range[1], type=int)
+                        help="upper range of number to use, default is {}".format(default_number_range[1]),
+                        default=default_number_range[1], type=int)
     parser.add_argument("--number_of_passwords",
-                        help="number of passwords to generate, default is {}".format(number_of_passwords),
-                        default=number_of_passwords, type=int)
+                        help="number of passwords to generate, default is {}".format(default_number_of_passwords),
+                        default=default_number_of_passwords, type=int)
     parser.add_argument("--word_separator",
                         help="choose a character or string to separate the randomly selected words. The default is '{}'"
-                        .format(word_separator),
-                        default=word_separator, type=str)
+                        .format(default_word_separator),
+                        default=default_word_separator, type=str)
     parser.add_argument("--shuffle_password",
                         help="shuffle the order in which each password component is used, default is {}"
-                        .format(shuffle_password),
-                        default=shuffle_password, action="store_true")
+                        .format(default_shuffle_password),
+                        default=default_shuffle_password, action="store_true")
+    parser.add_argument("--do_not_capitalize",
+                        help="do not capitalize the first letter of each word, default is {}"
+                        .format(default_capitalize),
+                        default=default_capitalize, action="store_false")
     parser.add_argument("--display_defaults",
                         help="Displays default values and exits",
                         default=False, action="store_true")
@@ -202,5 +225,5 @@ if __name__ == "__main__":
     generate_passwords(number_of_symbols=args.symbols, number_of_nouns=args.nouns, number_of_adverbs=args.adverbs,
                        number_of_adjectives=args.adjectives, number_of_passwords=args.number_of_passwords,
                        word_separator=args.word_separator, shuffle_password=args.shuffle_password,
-                       number_range=(args.number_lower_range, args.number_upper_range)
-                       )
+                       number_range=(args.number_lower_range, args.number_upper_range),
+                       capitalize=args.do_not_capitalize)
