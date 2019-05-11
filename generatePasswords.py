@@ -105,43 +105,44 @@ def generate_passwords(number_of_nouns=0,
     adverbs = [line.rstrip('\n') for line in openfile('./1syllableadverbs.txt')]
     adjectives = [line.rstrip('\n') for line in openfile('./1syllableadjectives.txt')]
     common_symbols = ['!', '@', "£", '$', '%', '^', '&', '*', '(', ')', '+', '=', '<', '>', '/', '?']
-    word_lists = [{ "number" : number_of_nouns, "words" : nouns},
-                  { "number" : number_of_verbs, "words" : verbs},
-                  { "number" : number_of_adverbs, "words" : adverbs},
-                  { "number" : number_of_adjectives, "words" : adjectives},
-                  { "number" : number_of_symbols, "words" : common_symbols}]
+    word_lists = [{ "number_of_words_to_use": number_of_nouns, "word_list": nouns},
+                  { "number_of_words_to_use": number_of_verbs, "word_list": verbs},
+                  { "number_of_words_to_use": number_of_adverbs, "word_list": adverbs},
+                  { "number_of_words_to_use": number_of_adjectives, "word_list": adjectives},
+                  { "number_of_words_to_use": number_of_symbols, "word_list": common_symbols}]
 
     for _ in range(number_of_passwords):
         password_components = []
         # loop through each word list and choose a random word to add to password_components[]
         for w_list in word_lists:
-            if w_list["number"] > 0:
-                for _ in range(w_list["number"]):
-                    password_components.append(get_random_value(w_list["words"]))
+            if w_list["number_of_words_to_use"] > 0:
+                for _ in range(w_list["number_of_words_to_use"]):
+                    password_components.append(get_random_value(w_list["word_list"]))
         password_components.append(str(random.randint(number_range[0], number_range[1])))
 
         if shuffle_password:
             random.shuffle(password_components)
 
         # add completed password to list of passwords
-        password_list.append(separator.join(password_components))
+        p = separator.join(password_components)
+        password_list.append(p)
 
         if display_passwords:
-            print(separator.join(password_components))
+            print(p)
 
     return password_list
 
 
 if __name__ == "__main__":
     # default values when run from the command line
-    number_of_nouns = 0
-    number_of_verbs = 0
-    number_of_adverbs = 1
-    number_of_adjectives = 1
-    number_of_symbols = 1
-    number_range = (0, 99)
-    number_of_passwords = 25
-    shuffle_password = False
+    number_of_nouns=0
+    number_of_verbs=0
+    number_of_adverbs=1
+    number_of_adjectives=1
+    number_of_symbols=1
+    number_range=(0, 99)
+    number_of_passwords=25
+    shuffle_password=False
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--nouns",
@@ -169,7 +170,8 @@ if __name__ == "__main__":
                         help="number of passwords to generate, default is {}".format(number_of_passwords),
                         default=number_of_passwords, type=int)
     parser.add_argument("--shuffle_password",
-                        help="shuffle the order in which each password component is used, default is {}".format(shuffle_password),
+                        help="shuffle the order in which each password component is used, default is {}"
+                        .format(shuffle_password),
                         default=shuffle_password, action="store_true")
     parser.add_argument("--display_defaults",
                         help="Displays default values and exits",
