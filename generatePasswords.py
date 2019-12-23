@@ -106,9 +106,9 @@ def append_word_list(word_lists, number_of_words, word_list):
     word_lists.append({"number_of_words_to_use": number_of_words, "word_list": word_list})
     return word_lists
 
+
 def write_csv_file(password_list, output_fn):
     csvfield = ['Password']
-
     fp = openfile(output_fn, 'w')
     csv_writer = csv.DictWriter(fp, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL, fieldnames=csvfield)
 
@@ -178,6 +178,7 @@ def generate_passwords(number_of_nouns=0,
 
     if write_csv:
         write_csv_file(password_list, CSV_OUTPUT_FILE_LOCATION)
+
     return password_list
 
 
