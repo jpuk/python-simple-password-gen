@@ -3,7 +3,7 @@
 Module Docstring
 """
 __author__ = "John Porter"
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 __license__ = "MIT License"
 # MIT License
 #
@@ -73,9 +73,8 @@ CSV_OUTPUT_FILE_LOCATION = './Passwords.csv'
 
 def openfile(fn, access):
     # check file exists and is not empty
-    if os.path.isfile(fn):
-        result = os.stat(fn)
-        if access == 'r':
+    if (os.path.isfile(fn) and access == 'r'):
+            result = os.stat(fn)
             if result.st_size < 1:
                 print("File {} is empty. Exiting.".format(fn))
                 exit(0)
@@ -108,12 +107,12 @@ def append_word_list(word_lists, number_of_words, word_list):
 
 
 def write_csv_file(password_list, output_fn):
-    csvfield = ['Password']
     fp = openfile(output_fn, 'w')
-    csv_writer = csv.DictWriter(fp, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL, fieldnames=csvfield)
+    csv_writer = csv.writer(fp, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 
     for password in password_list:
-        csv_writer.writerow({'Password' : password})
+        csv_writer.writerow([password])
+
 
 # enter a value for the number of words or symbols from each category from which the password will be formed
 # enter a lower and upper range for the number components of the password
@@ -132,7 +131,8 @@ def generate_passwords(number_of_nouns=0,
                        shuffle_password=True,
                        display_passwords=True,
                        capitalize=True,
-                       write_csv=False):
+                       write_csv=False,
+                       write_csv_filename=CSV_OUTPUT_FILE_LOCATION):
 
     # word lists I have used come from http://www.ashley-bovan.co.uk/words/partsofspeech.html
     # (https://drive.google.com/file/d/0B5eYVI2s0XztOVdaUnNWQWFZOEU/)
@@ -177,7 +177,7 @@ def generate_passwords(number_of_nouns=0,
             print(p)
 
     if write_csv:
-        write_csv_file(password_list, CSV_OUTPUT_FILE_LOCATION)
+        write_csv_file(password_list, write_csv_filename)
 
     return password_list
 
@@ -195,6 +195,7 @@ if __name__ == "__main__":
     default_capitalize = True
     default_shuffle_password = False
     default_write_csv = False
+    default_csv_filename = CSV_OUTPUT_FILE_LOCATION
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--nouns",
@@ -237,6 +238,10 @@ if __name__ == "__main__":
                         help="Output generated passwords to a CSV file, default is {}"
                         .format(default_write_csv),
                         default=default_write_csv, action="store_true")
+    parser.add_argument("--write_csv_filename",
+                        help="choose a path and filename for output csv. The default is '{}'"
+                        .format(default_csv_filename),
+                        default=default_csv_filename, type=str)
     parser.add_argument("--display_defaults",
                         help="Displays default values and exits",
                         default=False, action="store_true")
@@ -257,4 +262,5 @@ if __name__ == "__main__":
                        number_of_adjectives=args.adjectives, number_of_passwords=args.number_of_passwords,
                        word_separator=args.word_separator, shuffle_password=args.shuffle_password,
                        number_range=(args.number_lower_range, args.number_upper_range),
-                       capitalize=args.do_not_capitalize, write_csv=args.write_csv)
+                       capitalize=args.do_not_capitalize, write_csv=args.write_csv,
+                       write_csv_filename=args.write_csv_filename)
