@@ -63,6 +63,11 @@ import secrets
 import argparse
 import os
 
+NOUN_LIST_FILE_LOCATION = './1syllablenouns.txt'
+VERB_LIST_FILE_LOCATION = './1syllableverbs.txt'
+ADVERB_LIST_FILE_LOCATION = './1syllableadverbs.txt'
+ADJECTIVE_LIST_FILE_LOCATION = './1syllableadjectives.txt'
+COMMON_SYMBOLS = ['!', '@', "£", '$', '%', '^', '&', '*', '(', ')', '+', '=', '<', '>', '/', '?']
 
 def openfile(fn):
     # check file exists and is not empty
@@ -120,21 +125,22 @@ def generate_passwords(number_of_nouns=0,
     # but any text file formatted with one word per line will work
 
     # don't bother loading the word list file if we're not going to use any of it as a component of our passwords.
+
     word_lists = []
     if number_of_nouns > 0:
-        nouns = split_file_in_to_list('./1syllablenouns.txt')
+        nouns = split_file_in_to_list(NOUN_LIST_FILE_LOCATION)
         word_lists = append_word_list(word_lists, number_of_nouns, nouns)
     if number_of_verbs > 0:
-        verbs = split_file_in_to_list('./1syllableverbs.txt')
+        verbs = split_file_in_to_list(VERB_LIST_FILE_LOCATION)
         word_lists = append_word_list(word_lists, number_of_verbs, verbs)
     if number_of_adverbs > 0:
-        adverbs = split_file_in_to_list('./1syllableadverbs.txt')
+        adverbs = split_file_in_to_list(ADVERB_LIST_FILE_LOCATION)
         word_lists = append_word_list(word_lists, number_of_adverbs, adverbs)
     if number_of_adjectives > 0:
-        adjectives = split_file_in_to_list('./1syllableadjectives.txt')
+        adjectives = split_file_in_to_list(ADJECTIVE_LIST_FILE_LOCATION)
         word_lists = append_word_list(word_lists, number_of_adjectives, adjectives)
     if number_of_symbols > 0:
-        common_symbols = ['!', '@', "£", '$', '%', '^', '&', '*', '(', ')', '+', '=', '<', '>', '/', '?']
+        common_symbols = COMMON_SYMBOLS
         word_lists = append_word_list(word_lists, number_of_symbols, common_symbols)
 
     password_list = []
