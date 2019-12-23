@@ -62,30 +62,33 @@ import random
 import secrets
 import argparse
 import os
+import csv
 
 NOUN_LIST_FILE_LOCATION = './1syllablenouns.txt'
 VERB_LIST_FILE_LOCATION = './1syllableverbs.txt'
 ADVERB_LIST_FILE_LOCATION = './1syllableadverbs.txt'
 ADJECTIVE_LIST_FILE_LOCATION = './1syllableadjectives.txt'
 COMMON_SYMBOLS = ['!', '@', "£", '$', '%', '^', '&', '*', '(', ')', '+', '=', '<', '>', '/', '?']
+CSV_OUTPUT_FILE_LOCATION = './Passwords.csv'
 
-def openfile(fn):
+def openfile(fn, access):
     # check file exists and is not empty
     if os.path.isfile(fn):
         result = os.stat(fn)
-        if result.st_size < 1:
-            print("File {} is empty. Exiting.".format(fn))
-            exit(0)
+        if access == 'r':
+            if result.st_size < 1:
+                print("File {} is empty. Exiting.".format(fn))
+                exit(0)
     try:
-        fp = open(fn, 'r')
+        fp = open(fn, access)
         return fp
     except:
-        print("Could not open file {}, check file exists and you have permission to read it. Exiting.".format(fn))
+        print("Could not open file {}, check file exists and you have permission to read or write to it. Exiting.".format(fn))
         exit(0)
 
 
 def split_file_in_to_list(fn):
-    return [line.rstrip('\n') for line in openfile(fn)]
+    return [line.rstrip('\n') for line in openfile(fn, 'r')]
 
 
 def get_random_value(word_list, capitalize):
@@ -103,6 +106,15 @@ def append_word_list(word_lists, number_of_words, word_list):
     word_lists.append({"number_of_words_to_use": number_of_words, "word_list": word_list})
     return word_lists
 
+def write_csv_file(password_list, output_fn):
+    csvfield = ['Password']
+
+    fp = openfile(output_fn, 'w')
+    csv_writer = csv.DictWriter(fp, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL, fieldnames=csvfield)
+
+    for password in password_list:
+        csv_writer.writerow({'Password' : password})
+
 # enter a value for the number of words or symbols from each category from which the password will be formed
 # enter a lower and upper range for the number components of the password
 # enter number of passwords to generate
@@ -119,7 +131,9 @@ def generate_passwords(number_of_nouns=0,
                        word_separator="",
                        shuffle_password=True,
                        display_passwords=True,
-                       capitalize=True):
+                       capitalize=True,
+                       write_csv=False):
+
     # word lists I have used come from http://www.ashley-bovan.co.uk/words/partsofspeech.html
     # (https://drive.google.com/file/d/0B5eYVI2s0XztOVdaUnNWQWFZOEU/)
     # but any text file formatted with one word per line will work
@@ -162,6 +176,8 @@ def generate_passwords(number_of_nouns=0,
         if display_passwords:
             print(p)
 
+    if write_csv:
+        write_csv_file(password_list, CSV_OUTPUT_FILE_LOCATION)
     return password_list
 
 
@@ -177,6 +193,7 @@ if __name__ == "__main__":
     default_number_of_passwords = 25
     default_capitalize = True
     default_shuffle_password = False
+    default_write_csv = False
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--nouns",
@@ -215,6 +232,10 @@ if __name__ == "__main__":
                         help="do not capitalize the first letter of each word, default is {}"
                         .format(default_capitalize),
                         default=default_capitalize, action="store_false")
+    parser.add_argument("--write_csv",
+                        help="Output generated passwords to a CSV file, default is {}"
+                        .format(default_write_csv),
+                        default=default_write_csv, action="store_true")
     parser.add_argument("--display_defaults",
                         help="Displays default values and exits",
                         default=False, action="store_true")
@@ -235,4 +256,4 @@ if __name__ == "__main__":
                        number_of_adjectives=args.adjectives, number_of_passwords=args.number_of_passwords,
                        word_separator=args.word_separator, shuffle_password=args.shuffle_password,
                        number_range=(args.number_lower_range, args.number_upper_range),
-                       capitalize=args.do_not_capitalize)
+                       capitalize=args.do_not_capitalize, write_csv=args.write_csv)
