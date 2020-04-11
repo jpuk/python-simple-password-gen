@@ -119,11 +119,17 @@ class PasswordGenerator:
         return word_lists
 
     def write_csv_file(self, password_list, output_fn):
-        fp = self.openfile(output_fn, 'w', newline='')
+        fp = self.openfile(output_fn, 'w', newline=',')
         csv_writer = csv.writer(fp, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 
         for password in password_list:
             csv_writer.writerow([password])
+        fp.close()
+
+    def write_text_file(self, password_list, output_fn):
+        fp = self.openfile(output_fn, 'w')
+        fp.writelines(password_list)
+        fp.close()
 
     # enter a value for the number of words or symbols from each category from which the password will be formed
     # enter a lower and upper range for the number components of the password
