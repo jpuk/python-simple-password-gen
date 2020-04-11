@@ -46,16 +46,18 @@ Or choose them from the command line
     
 
    
- Alternatively generatePasswords.py can be used as a module from within your own script and will return a list of passwords.
+ Alternatively generatePasswords can be used as a module from within your own script and will return a list of passwords.
  
  All values are optional and will default to values predefined in the generatePasswords() function if none are provided.
  
  Example with options provided:
  
 
-    from generatePasswords import generate_passwords
+    import generatePasswords
+    
+    password_generator = generatePasswords.PasswordGenerator()
 
-    password_list = generate_passwords(numberOfNouns = 1,
+    password_generator.generate_passwords(numberOfNouns = 1,
                                    number_of_verbs = 1,
                                    number_of_adverbs = 1,
                                    number_of_adectives = 1,
@@ -64,7 +66,8 @@ Or choose them from the command line
                                    number_of_passwords = 25,
                                    shuffle_password = True,
                                    display_passwords = False)
-    print(password_list)
+    
+    print(password_generator.password_list)
 
 The one syllable word lists included in the git are from from Ashley Bovan's  excellent "Parts of speech" word collection available from [here](http://www.ashley-bovan.co.uk/words/partsofspeech.html) where lists of words with more syllables are also available.
  
