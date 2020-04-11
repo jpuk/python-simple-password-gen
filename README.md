@@ -1,8 +1,9 @@
 ﻿Simple Python script to generate password combinations with nouns, verbs, adverbs, adjectives, numbers and symbols.
 
- It can be run as a module from within your own script or as a standalone program.
+ It can be run as a module from within your own script or as a standalone program. (Either from the command line or with 
+ qt5 gui)
 
- Before running from the command line you can adjust the default values listed after
+ Before running from the command line you can adjust the default values in generatePassword_cli.py listed after
  
 
     if __name__ == "__main__":
@@ -68,6 +69,11 @@ Or choose them from the command line
                                    display_passwords = False)
     
     print(password_generator.password_list)
+
+Finally, I have also included a pyqt5 gui which can be opened by running generatePassword_gui_qt.py.
+
+You must have the python pyqt5 module installed to run the GUI.
+:> Python -m pip install pyqt5
 
 The one syllable word lists included in the git are from from Ashley Bovan's  excellent "Parts of speech" word collection available from [here](http://www.ashley-bovan.co.uk/words/partsofspeech.html) where lists of words with more syllables are also available.
  
