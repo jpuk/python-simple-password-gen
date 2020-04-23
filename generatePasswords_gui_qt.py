@@ -182,10 +182,12 @@ class Ui_MainWindow(object):
     def export_push_button_clicked(self):
         self.output_filename = os.path.abspath(QtWidgets.QFileDialog.getSaveFileName()[0])
         print("Export push button clicked - exporting to {}".format(self.output_filename))
-        if self.export_type == 0:
-            self.password_generator.write_csv_file(self.password_generator.password_list, self.output_filename)
-        else:
-            self.password_generator.write_text_file(self.password_generator.password_list, self.output_filename)
+        # fixes bug where clicking cancel will return directory path in osx
+        if os.path.isdir(self.output_filename) is not True:
+            if self.export_type == 0:
+                self.password_generator.write_csv_file(self.password_generator.password_list, self.output_filename)
+            else:
+                self.password_generator.write_text_file(self.password_generator.password_list, self.output_filename)
 
     def export_type_combo_box_changed(self):
         print("Export type combo box changed")
