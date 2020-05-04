@@ -75,5 +75,7 @@ Finally, I have also included a pyqt5 gui which can be opened by running generat
 You must have the python pyqt5 module installed to run the GUI.
 :> Python -m pip install pyqt5
 
+![Image of gui](https://raw.githubusercontent.com/jpuk/python-simple-password-gen/master/password-generator-gui.png)
+
 The one syllable word lists included in the git are from from Ashley Bovan's  excellent "Parts of speech" word collection available from [here](http://www.ashley-bovan.co.uk/words/partsofspeech.html) where lists of words with more syllables are also available.
  
